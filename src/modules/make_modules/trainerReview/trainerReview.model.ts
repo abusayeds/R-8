@@ -9,6 +9,11 @@ const trainerReviewSchema: Schema = new Schema<TTrainerReview>({
         required: true,
         ref: 'Trainer',
     },
+    userId: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'User',
+    },
     trainerRate: {
         type: Number,
         required: true,

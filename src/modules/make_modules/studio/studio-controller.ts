@@ -4,7 +4,7 @@ import httpStatus from "http-status";
 import { studioService } from "./studio-service";
 import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
-import { adminStudioApproveModel } from "../admin/adminApproveModel";
+import { adminStudioApproveModel } from "../admin/adminModel";
 
 const createStudio = catchAsync(async (req: Request, res: Response) => {
     const result = await studioService.createStudioDB(req.body)
@@ -23,9 +23,9 @@ const createStudio = catchAsync(async (req: Request, res: Response) => {
     }
 
 });
-const getStudio = catchAsync(async (req: Request, res: Response) => {
+const getSingleStudio = catchAsync(async (req: Request, res: Response) => {
     const { studioId } = req.params
-    const result = await studioService.getStudioDB(studioId as string)
+    const result = await studioService.getSingleStudioDB(studioId as string)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
@@ -59,7 +59,7 @@ const getStudios = catchAsync(async (req: Request, res: Response) => {
 
 export const studioController = {
     createStudio,
-    getStudio,
+    getSingleStudio,
     getStudioReviews,
     getStudios
 }

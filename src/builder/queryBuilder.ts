@@ -29,7 +29,7 @@ class queryBuilder<T> {
     excludeField.forEach((el) => delete copyQuair[el]);
     this.modelQuery = this?.modelQuery?.find(copyQuair as FilterQuery<T>);
     return this;
-  }
+  }      
   sort() {
     const sort =
       (this?.query?.sort as string)?.split(",")?.join(" ") || "-createAt";

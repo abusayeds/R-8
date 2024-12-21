@@ -23,7 +23,7 @@ export const PendingUserModel = mongoose.model<IPendingUser>(
 
 const UserSchema = new Schema<IUser>(
   {
-    name: { type: String, trim: true },
+    name: { type: String,  trim: true },
     email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, trim: true },
     confirmPassword: { type: String, trim: true },

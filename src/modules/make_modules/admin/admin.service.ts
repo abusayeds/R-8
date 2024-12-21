@@ -1,15 +1,35 @@
 import httpStatus from "http-status";
 import AppError from "../../../errors/AppError";
-import { adminStudioApproveModel, admintrainerApproveModel } from "./adminApproveModel";
+import { adminStudioApproveModel, admintrainerApproveModel, userVisitModel } from "./adminModel";
 import { trainerModel } from "../trainer/trainer-model";
 import studioModel from "../studio/studio-model";
+import { UserModel } from "../../basic_modules/user/user.model";
+import { studioReviewModel } from "../studioReview/studioReview.model";
+import { trainerReviewModal } from "../trainerReview/trainerReview.model";
+
+ const adminDB  = async () => {
+    const [user, trainer, studio, visitor] = await Promise.all([
+        UserModel.find(),
+        trainerModel.find(),
+        studioModel.find(),
+        userVisitModel.findOne()
+    ]);
+    const info = {
+        totalUser: user.length,
+        totalTrainer: trainer.length,
+        totalStudio: studio.length,
+        totalVisitor: visitor ? visitor.count : 0, 
+    };
+
+    return info;
+ }
 
 const adminStudioRequestDB  = async () => {
-    const result = await adminStudioApproveModel.find();
+    const result = await adminStudioApproveModel.find().populate('studioId');
     return result
 };
 const adminTrainerRequestDB  = async () => {
-    const result = await admintrainerApproveModel.find();
+    const result = await admintrainerApproveModel.find().populate('trainerId');
     return result
 };
 const adminApproveRequestDB  = async (id : string) => {
@@ -38,21 +58,28 @@ const adminDenyRequestDB  = async (id : string) => {
         throw new AppError (httpStatus.BAD_REQUEST, 'Wrong request') 
     }
 };
+const deleteReviewsDB = async (id : string) => {
+    const studioReview = await studioReviewModel.findById(id);
+    const trainerReview = await trainerReviewModal.findById(id);
+    if(studioReview){
+        await studioReviewModel.findByIdAndDelete(id)
+    }
+    if(trainerReview){
+        await trainerReviewModal.findByIdAndDelete(id)
+    }
+};
+const blockUserDB = async (id : string) => {
+     const result = await  UserModel.findByIdAndUpdate(id , {isblock : true } , { new: true })
+     return result
+};
  
 export const adminService  = {
     adminStudioRequestDB,
     adminTrainerRequestDB,
     adminApproveRequestDB,
-    adminDenyRequestDB
+    adminDenyRequestDB,
+    adminDB,
+    deleteReviewsDB,
+    blockUserDB
 }
 
-// const getStudioReviewsDB = async () => {
-//     const result = await studioReviewModel.find({ studioId: id });
-    
-//     const updatedResult = result.map((review) => {
-//         const reviewData = review.toObject();
-//         return calculateReviewQuality(reviewData); 
-//     });
-    
-//     return updatedResult;
-// };

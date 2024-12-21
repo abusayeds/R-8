@@ -2,6 +2,7 @@ import { Types } from "mongoose"
 
 export type TTrainerReview = {
     trainerId: Types.ObjectId,
+    userId: Types.ObjectId,
     trainerRate: number,
     diffcultTrainer: number,
     takeClass: boolean,

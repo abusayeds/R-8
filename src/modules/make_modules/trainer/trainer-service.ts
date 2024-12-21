@@ -27,7 +27,7 @@ const getTrainerDB = async (id: string) => {
     return result
 };
 const getTrainersDB = async (query: Record<string, unknown>) => {
-    const trainerQuery = new queryBuilder(trainerModel.find(), query)
+    const trainerQuery = new queryBuilder(trainerModel.find({isApprove:true}), query)
         .search(TrainerSearchbleField)
     const result = await trainerQuery.modelQuery
     return result;

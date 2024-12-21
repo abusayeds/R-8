@@ -45,11 +45,10 @@
 import { createLogger, format, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 import path from "path";
-import express, { Request, Response, NextFunction } from "express";
+import  { Request, Response, NextFunction } from "express";
 import {
   blue,
   green,
-  greenBright,
   magenta,
   red,
   yellow,

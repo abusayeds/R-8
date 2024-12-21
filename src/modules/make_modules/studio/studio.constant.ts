@@ -13,9 +13,25 @@ export const calculateReviewQuality = (reviewData: any) => {
         reviewData.equipment,
         reviewData.gracePeriod
     ];
-    
     const total = fieldsToSum.reduce((acc, val) => acc + val, 0);
     const quality = total / fieldsToSum.length;
     
     return { ...reviewData, quality: quality.toFixed(1) };
+};
+export const calculateReviewQuality2 = (reviewData: any) => {
+    const fieldsToSum = [
+        reviewData.reputation,
+        reviewData.price,
+        reviewData.location,
+        reviewData.parking,
+        reviewData.atmosphere,
+        reviewData.availability,
+        reviewData.cleanliness,
+        reviewData.equipment,
+        reviewData.gracePeriod
+    ];
+    const total = fieldsToSum.reduce((acc, val) => acc + val, 0);
+    const quality = total / fieldsToSum.length;
+    
+    return {  quality: quality.toFixed(1) };
 };

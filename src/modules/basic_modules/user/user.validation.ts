@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 export const loginValidation = z.object({
   body: z.object({
     email: z
@@ -34,5 +35,7 @@ export const registerUserValidation = z.object({
       .min(6, "Password must be at least 6 characters long"),
   }),
 });
+
+
 
 

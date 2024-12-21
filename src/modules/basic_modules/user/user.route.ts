@@ -10,17 +10,18 @@ import {
   changePassword,
   updateUser,
   getSelfInfo,
-  getAllUsers,
-  BlockUser,
-  deleteUser,
   adminloginUser,
+  BlockUser,
+  getAllUsers,
+  deleteUser,
+  getAllUserReview,
 } from "./user.controller";
 
 import zodValidation from "../../../middlewares/zodValidationHandler";
 import upload from "../../../middlewares/fileUploadNormal";
+import { loginValidation, registerUserValidation } from "./user.validation";
 import { authMiddleware } from "../../../middlewares/auth";
 import { role } from "../../../utils/role";
-import { loginValidation, registerUserValidation } from "./user.validation";
 const router = express.Router();
 router.post("/register", zodValidation(registerUserValidation), registerUser,);
 router.post("/login", zodValidation(loginValidation), loginUser);
@@ -33,8 +34,12 @@ router.post("/verify-forget-otp", verifyForgotPasswordOTP);
 router.post("/change-password", changePassword);
 router.post("/update", upload.single("image"), updateUser);
 router.get("/my-profile", getSelfInfo);
+
+// ** user //
 router.get("/all-user", authMiddleware(role.admin), getAllUsers);
 router.post("/block-user", authMiddleware(role.admin), BlockUser);
 router.post("/delete", authMiddleware(role.admin), deleteUser);
+router.get("/user-all-review/:userId", authMiddleware(role.admin), getAllUserReview);
+
 
 export const UserRoutes = router;

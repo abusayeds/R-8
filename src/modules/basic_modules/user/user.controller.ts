@@ -16,6 +16,7 @@ import {
   saveOTP,
   sendOTPEmail,
   updateUserById,
+  usarallReview,
   userDelete,
 } from "./user.service";
 import { OTPModel, PendingUserModel, UserModel } from "./user.model";
@@ -510,12 +511,12 @@ export const getSelfInfo = catchAsync(async (req: Request, res: Response) => {
 
 export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new AppError(httpStatus.UNAUTHORIZED,
-      "No token provided or invalid format.",
-    );
-  }
-  const token = authHeader.split(" ")[1];
+  // if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  //   throw new AppError(httpStatus.UNAUTHORIZED,
+  //     "No token provided or invalid format.",
+  //   );
+  // }
+  const token = authHeader!.split(" ")[1];
   const decoded = jwt.verify(token, JWT_SECRET_KEY as string) as { id: string };
   const adminId = decoded.id;
 
@@ -731,3 +732,15 @@ export const adminloginUser = catchAsync(
     });
   },
 );
+
+export const   getAllUserReview = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.params
+  const result = await usarallReview(userId as string)
+  sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: " Get All User Review successfully !",
+      data: result,
+  });
+
+});

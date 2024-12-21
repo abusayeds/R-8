@@ -25,7 +25,8 @@ export const authMiddleware = (...requiredRoles: TRole[]) => {
       }
       next();
     } catch (error) {
-      res.status(400).json({ success: false, message: "Invalid token!" });
+      throw new AppError(400, "Invalid token! ")
+      
     }
   };
 };

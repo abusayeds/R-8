@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { TVisitor } from "./admin-interface";
 
 const studioApproveSchema: Schema = new Schema(
   {
@@ -35,20 +36,21 @@ const trainerApproveSchema: Schema = new Schema(
   }
 );
 
-interface IUserVisit extends Document {
-  date: string; // Date of the visit
-  deviceName: string; // Device name or user agent
-  count: number; // Count for the specific device
-}
 
-const userVisitSchema = new Schema<IUserVisit>({
-  date: { type: String, required: true },
-  deviceName: { type: String, required: true },
-  count: { type: Number, default: 1 },
-});
 
-const UserVisit = mongoose.model<IUserVisit>("UserVisit", userVisitSchema);
-export default UserVisit;
+const userVisitSchema = new Schema<TVisitor>({
+  count: {
+    type: Number,
+    default: 0,
+  },
+  uniqueVisitors: {
+    type: [String],
+    default: [],
+  },
+}, { timestamps: true });
+
+export const userVisitModel = mongoose.model<TVisitor>("UserVisit", userVisitSchema);
+
 
 export const adminStudioApproveModel = mongoose.model(
   "adminStudioApprove",

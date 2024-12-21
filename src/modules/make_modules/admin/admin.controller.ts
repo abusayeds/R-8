@@ -4,6 +4,15 @@ import { adminService } from "./admin.service";
 import sendResponse from "../../../utils/sendResponse";
 import httpStatus from "http-status";
 
+const admin = catchAsync(async (req: Request, res: Response) => {
+    const result = await adminService.adminDB()
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: " Get All User, Studio , Trainer, Traffic successfully !",
+        data: result,
+    });
+});
 const adminStudioRequest = catchAsync(async (req: Request, res: Response) => {
     const result = await adminService.adminStudioRequestDB()
     sendResponse(res, {
@@ -42,10 +51,33 @@ const adminDenyRequest = catchAsync(async (req: Request, res: Response) => {
         data: null
     });
 });
+const deleteReview = catchAsync(async (req: Request, res: Response) => {
+    const { reviewId } = req.params
+    await adminService.deleteReviewsDB(reviewId)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Review Dedeleted",
+        data: null
+    });
+});
+const blockUser = catchAsync(async (req: Request, res: Response) => {
+    const { userId } = req.params
+    await adminService.blockUserDB(userId)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "User Blocked",
+        data: null
+    });
+});
 
 export const adminController = {
     adminStudioRequest,
     adminTrainerRequest,
     adminApproveRequest,
-    adminDenyRequest
+    adminDenyRequest, 
+    admin,
+    deleteReview,
+    blockUser
 }

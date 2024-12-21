@@ -13,6 +13,7 @@ import { studioReviewRouts } from "../modules/make_modules/studioReview/studioRe
 import { trainerRouts } from "../modules/make_modules/trainer/trainer-route";
 import { trainerReviewRouts } from "../modules/make_modules/trainerReview/trainerReview.route";
 import { adminRouts } from "../modules/make_modules/admin/admin.route";
+import { reportRouts } from "../modules/make_modules/report/repost.route";
 
 
 const router = express.Router();
@@ -39,6 +40,9 @@ router.use("/api/v1/trainer-review", trainerReviewRouts);
 
 // ***admin route *** //
 router.use("/api/v1/admin", adminRouts);
+
+// *** repport route *** //
+router.use("/api/v1/report", reportRouts);
 
 // *** makes route *** //
 

@@ -1,4 +1,4 @@
-import { model, Schema,  } from "mongoose";
+import { model, Schema, } from "mongoose";
 import { TStudioReview } from './studioReview.interface';
 
 
@@ -17,7 +17,10 @@ const TStudioReviewSchema = new Schema<TStudioReview>({
     equipment: { type: Number, required: true, min: 1, max: 5 },
     gracePeriod: { type: Number, required: true, min: 0 },
     writeReview: { type: String, required: false }
-});
+}, {
+    timestamps: true,
+}
+);
 
 export const studioReviewModel = model<TStudioReview>('StudioReview', TStudioReviewSchema);
 

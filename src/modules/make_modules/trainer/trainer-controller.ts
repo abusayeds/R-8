@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
 import { trainerService } from "./trainer-service";
-import { admintrainerApproveModel } from "../admin/adminApproveModel";
+import { admintrainerApproveModel } from "../admin/adminModel";
 
 const createTrainer = catchAsync(async (req: Request, res: Response) => {
     const result = await trainerService.createTrainerDB(req.body)

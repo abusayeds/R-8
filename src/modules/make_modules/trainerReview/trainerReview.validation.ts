@@ -9,6 +9,12 @@ export const ctrateTrainerReviewValidation = z.object({
         }).refine((val) => Types.ObjectId.isValid(val), {
             message: "Invalid ObjectId format",
         }),
+        userId: z.string({
+            required_error: "userId  is required!",
+            invalid_type_error: "userId must be a valid string",
+        }).refine((val) => Types.ObjectId.isValid(val), {
+            message: "Invalid ObjectId format",
+        }),
 
         trainerRate: z.number({
             required_error: "trainerRate is required!",

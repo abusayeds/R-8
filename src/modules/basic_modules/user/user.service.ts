@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import bcrypt from "bcrypt";
-
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import { IUser, IPendingUser } from "./user.interface";
-
-
 import { JWT_SECRET_KEY, Nodemailer_GMAIL, Nodemailer_GMAIL_PASSWORD } from "../../../config";
 import { OTPModel, PendingUserModel, UserModel } from "./user.model";
+import { studioReviewModel } from "../../make_modules/studioReview/studioReview.model";
+import { trainerReviewModal } from "../../make_modules/trainerReview/trainerReview.model";
+import { calculateReviewQuality } from "../../make_modules/studio/studio.constant";
+import reportModel from "../../make_modules/report/report.model";
 
 
 export const createUser = async ({
@@ -54,7 +55,7 @@ export const getUserList = async (
   //const query: any = { _id: { $ne: adminId } };
 
   const query: any = {
-    $and: [{ isDeleted: { $ne: true } }, { _id: { $ne: adminId } }],
+    $and: [{ isDeleted: { $ne: true } }, {  isblock: { $ne: true } }, { _id: { $ne: adminId } }],
   };
 
   if (date) {
@@ -181,4 +182,54 @@ export const changeUserRole = async (
 
 export const userDelete = async (id: string): Promise<void> => {
   await UserModel.findByIdAndUpdate(id, { isDeleted: true });
+};
+
+export const allUsers = async () => {
+    const result = await UserModel.find();
+    return result;
+ 
+};
+export const usarallReview = async (id : string) => {
+  try {
+    const studioReviews = await studioReviewModel.find({ userId: id }).populate({
+      path: 'studioId',
+      select: 'studioName',
+    });
+
+    const userStudioReview = await Promise.all(
+      studioReviews.map(async (review) => {
+        const reviewData = review.toObject();
+        const reportCount = await reportModel.countDocuments({ reviewId: review._id.toString() });
+        return {
+          ...calculateReviewQuality(reviewData),
+          reportLength: reportCount,
+        };
+      })
+    );
+
+    // Fetch trainer reviews for the user
+    const trainerReviews = await trainerReviewModal.find({ userId: id }).populate({
+      path: 'trainerId',
+      select: 'firstName',
+    });
+
+    const userTrainerReview = await Promise.all(
+      trainerReviews.map(async (review) => {
+        const reviewData = review.toObject();
+        const reportCount = await reportModel.countDocuments({ reviewId: review._id.toString() });
+        return {
+          ...reviewData,
+          reportLength: reportCount,
+        };
+      })
+    );
+
+    // Combine studio reviews, trainer reviews
+    const combinedReviews = [...userStudioReview, ...userTrainerReview];
+
+    return combinedReviews;
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    throw new Error('Failed to fetch reviews');
+  }
 };
