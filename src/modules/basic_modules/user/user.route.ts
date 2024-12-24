@@ -33,7 +33,7 @@ router.post("/resend", resendOTP);
 router.post("/verify-forget-otp", verifyForgotPasswordOTP);
 router.post("/change-password", changePassword);
 router.post("/update", upload.single("image"), updateUser);
-router.get("/my-profile", getSelfInfo);
+router.get("/my-profile" , getSelfInfo);
 
 // ** user //
 router.get("/all-user", authMiddleware(role.admin), getAllUsers);

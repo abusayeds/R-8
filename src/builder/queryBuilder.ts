@@ -21,7 +21,6 @@ class queryBuilder<T> {
     }
     return this;
   }
-
   // fillter method
   fillter() {
     const copyQuair = { ...this?.query };
@@ -36,11 +35,9 @@ class queryBuilder<T> {
     this.modelQuery = this.modelQuery.sort(sort as string);
     return this;
   }
-  //pagination method
-
   pagenate() {
-    const page = Number(this?.query?.page);
-    const limit = Number(this?.query?.limit);
+    const page = Number(this?.query?.page) || 1;
+    const limit = Number(this?.query?.limit) || 10;
     const skip = (page - 1) * limit;
     this.modelQuery = this?.modelQuery?.skip(skip).limit(limit);
     return this;

@@ -32,12 +32,16 @@ const getTrainer = catchAsync(async (req: Request, res: Response) => {
         data: result,
     });
 });
+
+
 const getTrainers = catchAsync(async (req: Request, res: Response) => {
     const result = await trainerService.getTrainersDB(req.query)
+   
+    
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: " Get Trainer  successfully !",
+        message: " Get All Trainer  successfully !",
         data: result,
     });
 

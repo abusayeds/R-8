@@ -6,6 +6,7 @@ import studioModel from "./studio-model";
 import { ObjectId } from 'mongodb';
 import queryBuilder from "../../../builder/queryBuilder";
 import { calculateReviewQuality, calculateReviewQuality2, studioSearchbleField } from "./studio.constant";
+import paginationBuilder from "../../../utils/paginationBuilder";
 const createStudioDB = async (payload: TStudio,) => {
     const result = await studioModel.create(payload)
     return result
@@ -75,16 +76,16 @@ const getSingleStudioDB = async (id: string) => {
             averages[key] = roundToDecimal(averages[key]);
         }
     })
-            const reviews = await studioReviewModel.find({ studioId: new ObjectId(id) });
-            const overallQuality = reviews.reduce((acc, review) => {
-                const reviewData = review.toObject();
-                const { quality } = calculateReviewQuality2(reviewData);
-                return acc + parseFloat(quality);
-            }, 0);
-            const reviewCount = reviews.length;
-            const averageQuality = reviewCount > 0 ? (overallQuality / reviewCount).toFixed(1) : 0.0
-    
-    return { result, averages, mostFrequentPrice, averageQuality  };
+    const reviews = await studioReviewModel.find({ studioId: new ObjectId(id) });
+    const overallQuality = reviews.reduce((acc, review) => {
+        const reviewData = review.toObject();
+        const { quality } = calculateReviewQuality2(reviewData);
+        return acc + parseFloat(quality);
+    }, 0);
+    const reviewCount = reviews.length;
+    const averageQuality = reviewCount > 0 ? (overallQuality / reviewCount).toFixed(1) : 0.0
+
+    return { result, averages, mostFrequentPrice, averageQuality };
 };
 
 const getStudioReviewsDB = async (id: string) => {
@@ -96,15 +97,12 @@ const getStudioReviewsDB = async (id: string) => {
     return updatedResult;
 };
 const getStudiosDB = async (query: Record<string, unknown>) => {
+    const count = await studioModel.countDocuments({})
     const studioQuery = new queryBuilder(studioModel.find({ isApprove: true }), query)
-        .search(studioSearchbleField);
-    const result1 = await studioQuery.modelQuery;
-    if (!Array.isArray(result1)) {
-        throw new Error('Expected result1 to be an array');
-    }
-
-    const updatedResults = await Promise.all(
-        result1.map(async (studio) => {
+        .search(studioSearchbleField).pagenate()
+    const result = await studioQuery.modelQuery;
+    const studios = await Promise.all(
+        result.map(async (studio) => {
             const studioId = studio._id;
             const reviews = await studioReviewModel.find({ studioId });
             const overallQuality = reviews.reduce((acc, review) => {
@@ -116,16 +114,22 @@ const getStudiosDB = async (query: Record<string, unknown>) => {
             const reviewCount = reviews.length;
             return {
                 ...studio.toObject(),
-                overallQuality: reviewCount > 0 ? overallQuality.toFixed(1) : "0.0",
+                overallQuality: reviewCount > 0 ? overallQuality.toFixed(1) : 0.0,
                 reviewCount,
             };
         })
     );
+  
+    const currentPage = typeof query.page === "number" ? query.page : 1;
+    const limit = typeof query.limit === "number" ? query.limit : 10;
 
-    return updatedResults;
+    const pagination = paginationBuilder({
+        totalData: count,
+         currentPage,
+        limit,
+    });
+    return { pagination, studios };
 };
-
-
 
 export const studioService = {
     createStudioDB,

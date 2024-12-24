@@ -55,30 +55,22 @@ export const createAbout = catchAsync(async (req: Request, res: Response) => {
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'No token provided or invalid format.');
   }
-
   const token = authHeader.split(" ")[1];
   const decoded = jwt.verify(token, JWT_SECRET_KEY as string) as { id: string };
   const userId = decoded.id;
-
-  // Find the user by userId
   const user = await findUserById(userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found.');
   }
-
-  // Check if the user is an admin
   if (user.role !== "admin") {
     throw new AppError(httpStatus.FORBIDDEN, 'Only admins can create terms.');
   }
-
   const { description } = req.body;
   const sanitizedContent = sanitizeHtml(description, sanitizeOptions);
   if (!description) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Description is required!');
   }
-
   const result = await createAboutInDB({ sanitizedContent });
-
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
@@ -86,10 +78,8 @@ export const createAbout = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
 export const getAllAbout = catchAsync(async (req: Request, res: Response) => {
   const result = await getAllAboutFromDB();
-
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

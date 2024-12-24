@@ -241,9 +241,9 @@ export const forgotPassword = catchAsync(
 );
 
 export const resetPassword = catchAsync(async (req: Request, res: Response) => {
-
-  const email = req.query.email as string;
-
+  const token = req.headers.authorization?.split(" ")[1];
+  const decoded = jwt.verify(token as string , process.env.JWT_SECRET_KEY as string);
+  const { email, } = decoded as { email: string; id: string };
   const { password, confirmPassword } = req.body;
 
   if (!password || !confirmPassword) {
@@ -281,11 +281,7 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
 export const verifyOTP = catchAsync(async (req: Request, res: Response) => {
   const { otp } = req.body;
-  console.log(otp);
-
   const authHeader = req.headers.authorization;
-  console.log(authHeader);
-
   if (!authHeader || !authHeader.startsWith("Bearer")) {
     throw new AppError(httpStatus.UNAUTHORIZED,
       "No token provided or invalid format  ",
@@ -338,29 +334,26 @@ export const verifyOTP = catchAsync(async (req: Request, res: Response) => {
 export const verifyForgotPasswordOTP = catchAsync(
   async (req: Request, res: Response) => {
     const { otp } = req.body;
-    const email = req.query.email as string;
-
+    const token = req.headers.authorization?.split(" ")[1];
+    const decoded = jwt.verify(token as string , process.env.JWT_SECRET_KEY as string);
+    const { email, } = decoded as { email: string; id: string };
     const otpRecord = await OTPModel.findOne({ email });
-
     if (!otpRecord) {
       throw new AppError(httpStatus.NOT_FOUND,
         "User not found!",
       );
     }
-
     const currentTime = new Date();
     if (otpRecord.expiresAt < currentTime) {
       throw new AppError(httpStatus.BAD_REQUEST,
         "OTP has expired",
       );
     }
-
     if (otpRecord.otp !== otp) {
       throw new AppError(httpStatus.BAD_REQUEST,
         "Wrong OTP",
       );
     }
-
     return sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -369,18 +362,15 @@ export const verifyForgotPasswordOTP = catchAsync(
     });
   },
 );
-
 export const changePassword = catchAsync(
   async (req: Request, res: Response) => {
     const { oldPassword, newPassword, confirmPassword } = req.body;
-
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       throw new AppError(httpStatus.UNAUTHORIZED,
         "No token provided or invalid format.",
       );
     }
-
     const token = authHeader.split(" ")[1];
 
     if (!oldPassword || !newPassword || !confirmPassword) {
@@ -437,7 +427,6 @@ export const updateUser = catchAsync(async (req: Request, res: Response) => {
       "No token provided or invalid format.",
     );
   }
-
   const token = authHeader.split(" ")[1];
   const decoded = jwt.verify(token, JWT_SECRET_KEY as string) as { id: string };
 
@@ -449,7 +438,6 @@ export const updateUser = catchAsync(async (req: Request, res: Response) => {
       "User not found.",
     );
   }
-
   const updateData: any = {};
   if (name) updateData.name = name;
   if (phone) updateData.phone = phone;
@@ -733,14 +721,14 @@ export const adminloginUser = catchAsync(
   },
 );
 
-export const   getAllUserReview = catchAsync(async (req: Request, res: Response) => {
+export const getAllUserReview = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.params
   const result = await usarallReview(userId as string)
   sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: " Get All User Review successfully !",
-      data: result,
+    statusCode: httpStatus.OK,
+    success: true,
+    message: " Get All User Review successfully !",
+    data: result,
   });
 
 });

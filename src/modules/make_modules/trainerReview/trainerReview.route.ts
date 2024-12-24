@@ -11,5 +11,6 @@ import { role } from "../../../utils/role";
 const router = Router();
 
 router.post("/create-trainer-review", authMiddleware(role.user), zodValidation(ctrateTrainerReviewValidation), trainerRevieewController.createTrainerReview); 
+router.get("/single-trainer-review/:trainerId",   trainerRevieewController.singleTrainerReview); 
 
 export const trainerReviewRouts = router;

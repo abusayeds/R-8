@@ -15,7 +15,19 @@ const createTrainerReview = catchAsync(async (req: Request, res: Response) => {
     });
 
 });
+const singleTrainerReview = catchAsync(async (req: Request, res: Response) => {
+    const { trainerId } = req.params
+    const result = await trainerReviewService.singleTrainerReviewDB(trainerId)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "  Trainer all review get successfully !",
+        data: result,
+    });
+
+});
 
 export const trainerRevieewController = {
-    createTrainerReview
+    createTrainerReview,
+    singleTrainerReview
 }
