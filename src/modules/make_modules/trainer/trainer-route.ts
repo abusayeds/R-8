@@ -10,7 +10,8 @@ import { trainerController } from "./trainer-controller";
 const router = Router();
 
 router.post("/create-trainer", authMiddleware(role.user), zodValidation(ctrateTrainerValidation), trainerController.createTrainer); 
-router.get("/trainers", authMiddleware(role.admin), trainerController.getTrainers);
-router.get("/get-trainer/:trainerId", authMiddleware(role.user),  trainerController.getTrainer); 
+router.get("/trainers",  trainerController.getTrainers);
+router.get("/get-trainer/:trainerId",  trainerController.getTrainer); 
+router.get("/get-similar-trainer/:trainerType",  trainerController.getSimilarTrainers); 
 
 export const trainerRouts = router;

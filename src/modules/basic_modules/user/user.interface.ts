@@ -2,14 +2,16 @@ import { Document } from "mongoose";
 
 export type IPendingUser = {
   email: string;
-  name: string;
+  fristName: string;
+  lastName: string;
   password: string;
   confirmPassword: string;
   role: "user" | "admin";
 } & Document;
 
 export type IUser = {
-  name?: string;
+  fristName: string;
+  lastName: string;
   email: string;
   password?: string;
   confirmPassword?: string;

@@ -1,5 +1,7 @@
+import { TStudio } from "./studio-interfacer";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const studioSearchbleField = [ "studioName", ]
+export const studioSearchbleField: Array<keyof TStudio>  = [ "studioName", "studioCity" , "neighborhood" ]
 
 export const calculateReviewQuality = (reviewData: any) => {
     const fieldsToSum = [
@@ -35,3 +37,19 @@ export const calculateReviewQuality2 = (reviewData: any) => {
     
     return {  quality: quality.toFixed(1) };
 };
+
+
+
+    // Define default averages
+   export const defaultAverages = {
+        avgReputation: 0,
+        avgLocation: 0,
+        avgParking: 0,
+        avgAtmosphere: 0,
+        avgAvailability: 0,
+        avgCleanliness: 0,
+        avgEquipment: 0,
+        avgGracePeriod: 0,
+        avgShock: false,
+        avgValidateParking: false,
+    };

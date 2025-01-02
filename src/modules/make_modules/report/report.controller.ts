@@ -7,6 +7,7 @@ import httpStatus from "http-status";
 const createReport = catchAsync(async (req: Request, res: Response) => {
     const { reviewId } = req.params
     const { user }: any = req
+    
     const result = await reportService.createReportDB(reviewId, user, req.body)
     sendResponse(res, {
         statusCode: httpStatus.OK,

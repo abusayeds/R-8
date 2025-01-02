@@ -11,8 +11,6 @@ import { TReport } from "./report.interface"
 
 
 const createReportDB = async (id: string, user: any, payload: TReport) => {
-    console.log(user.id);
-
     const ifStudioReview = await studioReviewModel.findById(id)
     const ifTrainerReview = await trainerReviewModal.findById(id)
     if (ifStudioReview) {

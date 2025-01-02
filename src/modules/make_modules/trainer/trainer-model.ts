@@ -9,32 +9,13 @@ const trainerSchema = new Schema<TTrainer>({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     studioName: { type: String, required: true },
+    neighborhood : { type: String, required: true },
     trainingType: {
         type: String,
         enum: ["Heated Yoga", "Pilates", "Lagree", "Boxing", "HILT", "Other"],
         required: true
     }
     , 
-    // rating: {
-    //     type: Map,
-    //     of: Number,
-    //     default: () => ({ '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 })
-    // },
-    // diffcultTrainer: {
-    //     type: Number,
-    //     default: 0,
-    //     required: true
-    // },
-    // takeClass: {
-    //     type: Number,
-    //     default: 0,
-    //     required: true
-    // },
-    // topTags: {
-    //     type: [String],
-    //     required: true,
-    //     enum: allowedTags,
-    // },
     isDeleted : {
         type : Boolean, 
         required : true,

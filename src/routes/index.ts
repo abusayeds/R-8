@@ -14,6 +14,7 @@ import { trainerRouts } from "../modules/make_modules/trainer/trainer-route";
 import { trainerReviewRouts } from "../modules/make_modules/trainerReview/trainerReview.route";
 import { adminRouts } from "../modules/make_modules/admin/admin.route";
 import { reportRouts } from "../modules/make_modules/report/repost.route";
+import { savedtrainerRouts } from "../modules/make_modules/trainer/saveTrainer/route";
 
 
 const router = express.Router();
@@ -43,6 +44,8 @@ router.use("/api/v1/admin", adminRouts);
 
 // *** repport route *** //
 router.use("/api/v1/report", reportRouts);
+// *** save trainer route *** //
+router.use("/api/v1/saveTrainer", savedtrainerRouts);
 
 // *** makes route *** //
 

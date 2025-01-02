@@ -32,7 +32,6 @@ const getSingleStudio = catchAsync(async (req: Request, res: Response) => {
         message: " Get Studio  successfully !",
         data: result,
     });
-
 });
 const getStudioReviews = catchAsync(async (req: Request, res: Response) => {
     const { studioId } = req.params

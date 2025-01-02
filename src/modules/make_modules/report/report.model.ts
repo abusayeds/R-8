@@ -3,7 +3,7 @@ import { TReport } from './report.interface';
 
 
 const rerportSchema = new Schema<TReport>({
-    reportUser : { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    reportUser : { type: Schema.Types.ObjectId,  ref: 'User' },
     reviewId:  {
         type :String,
         required : true

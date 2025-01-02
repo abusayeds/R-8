@@ -12,16 +12,19 @@ import reportModel from "../../make_modules/report/report.model";
 
 
 export const createUser = async ({
-  name,
+  fristName,
+  lastName,
   email,
   hashedPassword,
 }: {
-  name: string;
+  fristName: string;
+  lastName: string;
   email: string;
   hashedPassword: string;
 }): Promise<{ createdUser: IUser }> => {
   const createdUser = await UserModel.create({
-    name,
+    fristName,
+    lastName,
     email,
     password: hashedPassword,
   });
@@ -55,7 +58,7 @@ export const getUserList = async (
   //const query: any = { _id: { $ne: adminId } };
 
   const query: any = {
-    $and: [{ isDeleted: { $ne: true } }, {  isblock: { $ne: true } }, { _id: { $ne: adminId } }],
+    $and: [{ isDeleted: { $ne: true } }, { isblock: { $ne: true } }, { _id: { $ne: adminId } }],
   };
 
   if (date) {
@@ -82,17 +85,14 @@ export const getUserList = async (
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
-
   const totalUsers = await UserModel.countDocuments(query);
   const totalPages = Math.ceil(totalUsers / limit);
-
   return { users, totalUsers, totalPages };
 };
 
 export const generateOTP = (): string => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   console.log(`otp is hear ${otp}`);
-
   return otp
 };
 
@@ -185,11 +185,11 @@ export const userDelete = async (id: string): Promise<void> => {
 };
 
 export const allUsers = async () => {
-    const result = await UserModel.find();
-    return result;
- 
+  const result = await UserModel.find();
+  return result;
+
 };
-export const usarallReview = async (id : string) => {
+export const usarallReview = async (id: string) => {
   try {
     const studioReviews = await studioReviewModel.find({ userId: id }).populate({
       path: 'studioId',
@@ -233,3 +233,26 @@ export const usarallReview = async (id : string) => {
     throw new Error('Failed to fetch reviews');
   }
 };
+
+export const myReviewDB = async (id: string) => {
+  const trainer = await trainerReviewModal.find({ userId: id }).populate({
+    path: "trainerId",
+    select: "firstName lastName studioName  studioId ", 
+  })
+  const studio = await studioReviewModel.find({ userId: id }).populate({
+    path: "studioId",
+    select: "studioName ", 
+  })
+ 
+
+  return {
+    trainer, studio
+  }
+}
+
+
+
+export const signupDB = async (payload: IUser) => {
+  const result = await UserModel.create(payload)
+  return result
+}

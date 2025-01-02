@@ -6,7 +6,7 @@ import { trainerService } from "./trainer-service";
 import { admintrainerApproveModel } from "../admin/adminModel";
 
 const createTrainer = catchAsync(async (req: Request, res: Response) => {
-    const result = await trainerService.createTrainerDB(req.body)
+    const result = await trainerService.createTrainerDB(req.body ,)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
@@ -36,8 +36,6 @@ const getTrainer = catchAsync(async (req: Request, res: Response) => {
 
 const getTrainers = catchAsync(async (req: Request, res: Response) => {
     const result = await trainerService.getTrainersDB(req.query)
-   
-    
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
@@ -46,8 +44,21 @@ const getTrainers = catchAsync(async (req: Request, res: Response) => {
     });
 
 });
+const getSimilarTrainers = catchAsync(async (req: Request, res: Response) => {
+    const {trainerType} = req.params
+    const result = await trainerService.similartainerDB(trainerType)
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: " Get similar Trainer  successfully !",
+        data: result,
+    });
+
+});
 export const trainerController = {
     createTrainer,
     getTrainer,
-    getTrainers
+    getTrainers,
+    getSimilarTrainers
 }

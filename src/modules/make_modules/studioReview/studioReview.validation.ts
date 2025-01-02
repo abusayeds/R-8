@@ -3,12 +3,6 @@ import { Types } from 'mongoose';
 
 export const createStudioReviewValidation = z.object({
     body: z.object({
-        userId: z.string({
-            required_error: "userId is required!",
-            invalid_type_error: "userId must be a valid string",
-        }).refine((val) => Types.ObjectId.isValid(val), {
-            message: "Invalid ObjectId format",
-        }),
         studioId: z.string({
             required_error: "studioId is required!",
             invalid_type_error: "studioId must be a valid string",

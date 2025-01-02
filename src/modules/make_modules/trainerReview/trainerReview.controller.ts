@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
@@ -6,7 +7,8 @@ import { trainerReviewService } from "./trainerReview.service";
 
 
 const createTrainerReview = catchAsync(async (req: Request, res: Response) => {
-    const result = await trainerReviewService.createTrainerReviewDB(req.body)
+     const {user} : any = req
+    const result = await trainerReviewService.createTrainerReviewDB(req.body, user )
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,

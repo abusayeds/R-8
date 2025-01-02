@@ -1,3 +1,4 @@
+import { myReviewDB } from './user.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
@@ -15,6 +16,7 @@ import {
   hashPassword,
   saveOTP,
   sendOTPEmail,
+  signupDB,
   updateUserById,
   usarallReview,
   userDelete,
@@ -30,19 +32,15 @@ import { emitNotification } from "../../../utils/socket";
 
 export const registerUser = catchAsync(async (req: Request, res: Response) => {
   const { name, email, password, confirmPassword } = req.body;
-
   if (password !== confirmPassword) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Passwords do not match');
   }
-
-
   const isUserRegistered = await findUserByEmail(email);
   if (isUserRegistered) {
     throw new AppError(httpStatus.BAD_REQUEST,
       "You already have an account.",
     );
   }
-
   await PendingUserModel.findOneAndUpdate(
     { email },
     {
@@ -53,16 +51,12 @@ export const registerUser = catchAsync(async (req: Request, res: Response) => {
     },
     { upsert: true },
   );
-
   const otp = generateOTP();
   await saveOTP(email, otp);
-
   await sendOTPEmail(email, otp);
-
   const token = jwt.sign({ email }, JWT_SECRET_KEY as string, {
     expiresIn: "7d",
   });
-
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -70,7 +64,6 @@ export const registerUser = catchAsync(async (req: Request, res: Response) => {
     data: { token },
   });
 });
-
 export const resendOTP = catchAsync(async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
 
@@ -142,7 +135,8 @@ export const loginUser = catchAsync(async (req: Request, res: Response) => {
 
   const token = generateToken({
     id: user._id,
-    name: user.name,
+    fristName: user.fristName,
+    lastName: user.lastName,
     email: user.email,
     role: user.role,
     image: user?.image,
@@ -156,7 +150,8 @@ export const loginUser = catchAsync(async (req: Request, res: Response) => {
     data: {
       user: {
         id: user._id,
-        name: user.name,
+        fristName: user.fristName,
+        lastName: user.lastName,
         email: user.email,
         role: user.role,
         image: user?.image,
@@ -242,7 +237,7 @@ export const forgotPassword = catchAsync(
 
 export const resetPassword = catchAsync(async (req: Request, res: Response) => {
   const token = req.headers.authorization?.split(" ")[1];
-  const decoded = jwt.verify(token as string , process.env.JWT_SECRET_KEY as string);
+  const decoded = jwt.verify(token as string, process.env.JWT_SECRET_KEY as string);
   const { email, } = decoded as { email: string; id: string };
   const { password, confirmPassword } = req.body;
 
@@ -302,14 +297,15 @@ export const verifyOTP = catchAsync(async (req: Request, res: Response) => {
     );
   }
 
-  const { name, password } = (await getUserRegistrationDetails(
+  const { fristName, lastName, password } = (await getUserRegistrationDetails(
     email,
   )) as IPendingUser;
   //console.log(objective, "objective from controller");
   const hashedPassword = await hashPassword(password);
 
   const { createdUser } = await createUser({
-    name,
+    fristName,
+    lastName,
     email,
     hashedPassword,
   });
@@ -335,7 +331,7 @@ export const verifyForgotPasswordOTP = catchAsync(
   async (req: Request, res: Response) => {
     const { otp } = req.body;
     const token = req.headers.authorization?.split(" ")[1];
-    const decoded = jwt.verify(token as string , process.env.JWT_SECRET_KEY as string);
+    const decoded = jwt.verify(token as string, process.env.JWT_SECRET_KEY as string);
     const { email, } = decoded as { email: string; id: string };
     const otpRecord = await OTPModel.findOne({ email });
     if (!otpRecord) {
@@ -693,7 +689,8 @@ export const adminloginUser = catchAsync(
     // Generate new token for the logged-in user
     const newToken = generateToken({
       id: user._id,
-      name: user.name,
+      fristName: user.fristName,
+      lastName: user.lastName,
       email: user.email,
       role: user.role,
       image: user?.image,
@@ -710,7 +707,8 @@ export const adminloginUser = catchAsync(
       data: {
         user: {
           id: user._id,
-          name: user.name,
+          fristName: user.fristName,
+          lastName: user.lastName,
           email: user.email,
           role: user.role,
           image: user?.image,
@@ -732,3 +730,27 @@ export const getAllUserReview = catchAsync(async (req: Request, res: Response) =
   });
 
 });
+
+
+
+export const signup = catchAsync(async (req: Request, res: Response) => {
+  const result = await signupDB(req.body)
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: " sing up successfully !",
+    data: result,
+  });
+});
+export const myReview = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.params
+  const result = await myReviewDB(userId)
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: " Get All  successfully !",
+    data: result,
+  });
+});
+
+

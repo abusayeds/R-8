@@ -5,7 +5,7 @@ import AppError from "../errors/AppError";
 import httpStatus from "http-status";
 
 interface AuthRequest extends Request {
-  user?: jwt.JwtPayload | string;
+  user?: jwt.JwtPayload | string 
 }
 
 
@@ -13,20 +13,20 @@ export const authMiddleware = (...requiredRoles: TRole[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "Access denied. No token provided.")
+      throw new AppError(httpStatus.UNAUTHORIZED, "Access denied. You are not authorized")
     }
-
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string);
-      req.user = decoded;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string)
+
+      req.user = decoded 
       const role = (decoded as JwtPayload).role;
       if (requiredRoles && !requiredRoles.includes(role)) {
-        throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized  for this role ")
+        throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized for this role ")
       }
       next();
     } catch (error) {
       throw new AppError(400, "Invalid token! ")
-      
+
     }
   };
 };

@@ -6,7 +6,6 @@ import catchAsync from "../utils/catchAsync";
 const zodValidation = (schema: AnyZodObject) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         await schema.parseAsync(req)
-
         next()
     })
 }

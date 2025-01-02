@@ -268,7 +268,7 @@ export const usePromoCode = catchAsync(async (req: Request, res: Response) => {
   );
 
   // Create dynamic success message with the formatted expiry date for response
-  const text = `Congratulations, ${user.name}! You have successfully redeemed the coupon code "${cuponCode}". The coupon is valid for ${numericDuration} month(s) and will expire on ${formattedExpiryDate}. Enjoy the benefits!`;
+  const text = `Congratulations, ${user.fristName}${user.lastName}! You have successfully redeemed the coupon code "${cuponCode}". The coupon is valid for ${numericDuration} month(s) and will expire on ${formattedExpiryDate}. Enjoy the benefits!`;
 
   // Send success response with the formatted expiry date
   sendResponse(res, {

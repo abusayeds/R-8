@@ -1,11 +1,11 @@
 import mongoose, { Schema } from "mongoose";
 import { IPendingUser, IUser, IOTP } from "./user.interface";
 
-
 const PendingUserSchema = new Schema<IPendingUser>(
   {
     email: { type: String, required: true, unique: true, trim: true },
-    name: { type: String, required: true, trim: true },
+    fristName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
     password: { type: String, required: true, trim: true },
     confirmPassword: { type: String, required: true, trim: true },
     role: {
@@ -16,20 +16,21 @@ const PendingUserSchema = new Schema<IPendingUser>(
   { timestamps: true },
 );
 
+
 export const PendingUserModel = mongoose.model<IPendingUser>(
   "PendingUser",
   PendingUserSchema,
 );
 
+
 const UserSchema = new Schema<IUser>(
   {
-    name: { type: String,  trim: true },
+    fristName: { type: String,  trim: true },
+    lastName: { type: String,  trim: true },
     email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, trim: true },
     confirmPassword: { type: String, trim: true },
-
     address: { type: String, trim: true },
-
     image: {
       type: {
         publicFileURL: { type: String, trim: true },
@@ -62,9 +63,7 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true },
 );
 
-export const UserModel =
-  mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
-
+export const UserModel = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
 const OTPSchema = new Schema<IOTP>({
   email: { type: String, required: true, trim: true },
   otp: { type: String, required: true, trim: true },

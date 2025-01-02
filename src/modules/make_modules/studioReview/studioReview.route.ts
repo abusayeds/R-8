@@ -6,5 +6,6 @@ import { createStudioReviewValidation } from "./studioReview.validation";
 import { studioReviewController } from "./studioReview.controller";
 
 const router = Router();
-router.post("/create-review", authMiddleware(role.user), zodValidation(createStudioReviewValidation), studioReviewController.createStudio);
-export const studioReviewRouts = router;
+router.post("/create-review", authMiddleware(role.user), zodValidation(createStudioReviewValidation), studioReviewController.createStudioReview);
+router.get("/single-studio-review/:studioId",   studioReviewController.singleStudioReview); 
+export const studioReviewRouts = router; 

@@ -15,6 +15,8 @@ import {
   getAllUsers,
   deleteUser,
   getAllUserReview,
+  signup,
+  myReview,
 } from "./user.controller";
 
 import zodValidation from "../../../middlewares/zodValidationHandler";
@@ -24,6 +26,7 @@ import { authMiddleware } from "../../../middlewares/auth";
 import { role } from "../../../utils/role";
 const router = express.Router();
 router.post("/register", zodValidation(registerUserValidation), registerUser,);
+router.post("/signup", zodValidation(registerUserValidation), signup,);
 router.post("/login", zodValidation(loginValidation), loginUser);
 router.post("/admin-login", adminloginUser);
 router.post("/forget-password", forgotPassword);
@@ -41,5 +44,6 @@ router.post("/block-user", authMiddleware(role.admin), BlockUser);
 router.post("/delete", authMiddleware(role.admin), deleteUser);
 router.get("/user-all-review/:userId", authMiddleware(role.admin), getAllUserReview);
 
+router.get("/my-review/:userId" , myReview);
 
 export const UserRoutes = router;

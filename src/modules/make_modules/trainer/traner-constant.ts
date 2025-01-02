@@ -1,3 +1,5 @@
+import { TTrainer } from "./trainer-interfacer";
+
 export const allowedTags = [
     'Challenging Workouts',
     'Accessible for All Levels',
@@ -8,4 +10,4 @@ export const allowedTags = [
     'Advanced Techniques',
     'Great Cues',
 ] as const;
-export const TrainerSearchbleField = [ "firstName", "lastName" ]
+export const TrainerSearchbleField : Array<keyof TTrainer>  = [ "firstName", "lastName" ,"neighborhood" , "studioName"]

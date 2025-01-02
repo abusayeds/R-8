@@ -7,11 +7,8 @@ export type TTrainer = {
     firstName: string,
     lastName: string,
     studioName: string,
-    trainingType: "Heated Yoga" | "Pilates" | "Lagree" | "Boxing" | "HILT" | "Other",
-    // rating: Record<"1" | "2" | "3" | "4" | "5", number>,
-    // diffcultTrainer: number
-    // takeClass: number,
-    // topTags : typeof allowedTags[]
+    neighborhood : string
+    trainingType: "Heated Yoga" | "Pilates" | "Lagree" | "Boxing" | "HILT" | "g",
     isDeleted : boolean
     isApprove: boolean
 }

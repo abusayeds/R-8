@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import sendResponse from "../../../utils/sendResponse";
 import { studioReviewServise } from "./studioReview.service";
 
-const createStudio = catchAsync(async (req, res) => {
-    const result = await studioReviewServise.createStudioDB(req.body);
-
+const createStudioReview = catchAsync(async (req, res) => {
+    const {user} : any = req
+    const result = await studioReviewServise.createStudioReviewDB(req.body , user );
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
@@ -14,6 +15,19 @@ const createStudio = catchAsync(async (req, res) => {
     });
 });
 
+const singleStudioReview = catchAsync(async (req ,res ) => {
+    const { studioId } = req.params
+    const result = await studioReviewServise.singleStudioReviewDB(studioId)
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "  Trainer all review get successfully !",
+        data: result,
+    });
+
+});
+
  export const studioReviewController = {
-    createStudio
+    createStudioReview,
+    singleStudioReview
 }

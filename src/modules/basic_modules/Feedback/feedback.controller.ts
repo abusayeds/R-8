@@ -19,24 +19,17 @@ export const giveFeedback = catchAsync(async (req: Request, res: Response) => {
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw new AppError(httpStatus.UNAUTHORIZED, "No token provided or invalid format.");
   }
-
   const token = authHeader.split(" ")[1];
   const decoded = jwt.verify(token, JWT_SECRET_KEY as string) as { id: string };
   const userId = decoded.id;
-
-  // Find the user by userId
   const user = await findUserById(userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "This account does not exist.",);
   }
-
-  // Convert userId (string) to Types.ObjectId
-
   if (Number(rating) > 5) {
     throw new AppError(httpStatus.NOT_FOUND, "rating must be 1 to 5");
   }
-  // Create feedback
-  const name = user.name;
+  const name = user.fristName
   const email = user.email;
 
   const addFeedback = await createFeedback({
