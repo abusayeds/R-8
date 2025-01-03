@@ -415,7 +415,7 @@ export const changePassword = catchAsync(
 );
 
 export const updateUser = catchAsync(async (req: Request, res: Response) => {
-  const { name, address, bio, phone, age, about, gender } = req.body;
+  const {fristName, lastName , address, bio,  age, about, gender } = req.body;
 
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -435,8 +435,8 @@ export const updateUser = catchAsync(async (req: Request, res: Response) => {
     );
   }
   const updateData: any = {};
-  if (name) updateData.name = name;
-  if (phone) updateData.phone = phone;
+  if (fristName) updateData.fristName = fristName;
+  if (lastName) updateData.lastName = lastName;
   if (address) updateData.address = address;
   if (bio) updateData.bio = bio;
   if (age) updateData.age = age;

@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.reportRouts = void 0;
+const express_1 = require("express");
+const auth_1 = require("../../../middlewares/auth");
+const role_1 = require("../../../utils/role");
+const report_controller_1 = require("./report.controller");
+const router = (0, express_1.Router)();
+router.post("/create-report/:reviewId", (0, auth_1.authMiddleware)(role_1.role.user), report_controller_1.reportController.createReport);
+router.get("/get-all-review-report/:id", (0, auth_1.authMiddleware)(role_1.role.admin), report_controller_1.reportController.getRevidwReport);
+exports.reportRouts = router;

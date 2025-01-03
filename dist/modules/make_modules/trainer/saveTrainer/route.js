@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.savedtrainerRouts = void 0;
+const express_1 = require("express");
+const auth_1 = require("../../../../middlewares/auth");
+const role_1 = require("../../../../utils/role");
+const controller_1 = require("./controller");
+const router = (0, express_1.Router)();
+router.post("/saved-trainer", (0, auth_1.authMiddleware)(role_1.role.user), controller_1.savedTranercontroller.createSaveTrainer);
+router.get("/get-save-trainers/:userId", (0, auth_1.authMiddleware)(role_1.role.user), controller_1.savedTranercontroller.getSavedTrainer);
+exports.savedtrainerRouts = router;
